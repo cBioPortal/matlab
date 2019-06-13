@@ -13,19 +13,17 @@ function clinicalData = getclinicaldata(cgdsURL, caseListId, varargin)
 %    is given as strings. Use str2double() to convert to numeric format
 %    when appropriate.
 %
-%    A = getclinicaldata(cgdsURL, caseListId, 'silent')
-%    runs the function in non-verbose mode, supressing status and warning
-%    messages from the cBio CGDS web API. Any string or numerical
-%    (e.g. 'non-verbose' or 0) will have this effect. Error messages are
-%    always printed, as these indicate an unrecoverable problem.
+%    A = GETCLINICALDATA(cgdsURL, caseListId, 'verbose', [true | false], 'token', '<some token string>')
+%      - set 'verbose' to false to run in silent mode or true to run in verbose mode. Default is false.
+%      - set token to a valid token string for private portals
 %
 %    See also getcancertypes, getgeneticprofiles, getcaselists,
 %    getprofiledata.
 
-verbose = isempty(varargin);
+[verbose, token] = cgdsparser(varargin{:});
 if ~strcmp(cgdsURL(end), '/') cgdsURL(end + 1) = '/'; end
 
-cells  = urlgetcells([cgdsURL 'webservice.do?cmd=getClinicalData&case_set_id=' caseListId], verbose);
+cells  = urlgetcells([cgdsURL 'webservice.do?cmd=getClinicalData&case_set_id=' caseListId], verbose, token);
 
 clinicalData.caseId = cells(2:end, 1);
 clinicalData.clinVariable = cells(1, 2:end)';
