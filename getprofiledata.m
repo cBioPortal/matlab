@@ -24,21 +24,19 @@ function profileData = getprofiledata(cgdsURL, caseListId, geneticProfileId, gen
 %
 %    Field names follow column names as returned by the web API.
 %
-%    A = GETPROFILEDATA(cgdsURL, caseListId, geneticProfileId, geneList, toNumeric, 'silent')
-%    runs the function in non-verbose mode, supressing status and warning
-%    messages from the cBio CGDS web API. Any string or numerical
-%    (e.g. 'non-verbose' or 0) will have this effect. Error messages are
-%    always printed, as these indicate an unrecoverable problem.
+%    A = GETPROFILEDATA(cgdsURL, caseListId, geneticProfileId, geneList, toNumeric, 'verbose', [true | false], 'token', '<some token string>')
+%      - set 'verbose' to false to run in silent mode or true to run in verbose mode. Default is false.
+%      - set token to a valid token string for private portals
 %
 %    See also getcancertypes, getgeneticprofiles, getcaselists,
 %    getclinicaldata.
 
-verbose = isempty(varargin);
+[verbose, token] = cgdsparser(varargin{:});
 if ~strcmp(cgdsURL(end), '/') cgdsURL(end + 1) = '/'; end
 
 cells  = urlgetcells([cgdsURL 'webservice.do?cmd=getProfileData&case_set_id=' caseListId ...
                       '&genetic_profile_id=' cellarraytostr(geneticProfileId) ...
-                      '&gene_list=' cellarraytostr(geneList)], verbose);
+                      '&gene_list=' cellarraytostr(geneList)], verbose, token);
 
 % determine format
 if strcmp(cells(1,1), 'GENE_ID')
