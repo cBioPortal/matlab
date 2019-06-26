@@ -9,11 +9,11 @@
 addpath('/Users/Erik/Documents/MATLAB/cgds');
 
 % Set web API URL (excluding 'webservice.do', trailing slash optional)
-cgdsURL = 'http://www.cbioportal.org/public-portal/';
+cgdsURL = 'https://www.cbioportal.org/';
 
 %% Show toolbox help
-% Use 'helpwin cgds' if you prefer to display it in the Help window.
-help cgds;
+% Use 'helpwin cgdstutorial' if you prefer to display it in the Help window.
+help cgdstutorial;
 
 %% Get list of available cancer types
 cancerStudies = getcancerstudies(cgdsURL)
@@ -64,5 +64,8 @@ ecdf(overallSurvivalMonths(~isMutated), 'function','survivor');
 xlabel('Overall survival (months)'); ylabel('Proportion surviving');
 legend({'IDH1 mutated' 'IDH1 wild type'});
 
-%% Run a function in non-verbose mode
-cancerStudies = getcancerstudies(cgdsURL, 'silent');
+%% Run a function in verbose mode (default is non-verbose)
+cancerStudies = getcancerstudies(cgdsURL, 'verbose', 'true');
+
+%% Run a function with a data authentication token on a protected instance of the cBioPortal
+cancerStudies = getcancerstudies(cgdsURL, 'token', '<some-token-string>');
